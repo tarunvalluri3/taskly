@@ -5,6 +5,8 @@ import { Trash2 } from "lucide-react";
 import SkeletonCard from "../components/SkeletonCard";
 import EmptyState from "../components/EmptyState";
 import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
+import {ArrowRight} from "lucide-react" 
 
 const Deleted = () => {
   const { user } = useAuth();
@@ -57,6 +59,12 @@ const Deleted = () => {
           Deleted Tasks
         </h1>
         <p className="mt-1 text-sm text-gray-600">Tasks you removed</p>
+        <Link
+          to="/create-todo"
+          className=" mt-3 w-full max-w-xs px-6 py-3 text-sm font-semibold text-white bg-black rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition"
+        >
+          Create Task <ArrowRight size={16} />
+        </Link>
       </header>
 
       {todos.length === 0 && (

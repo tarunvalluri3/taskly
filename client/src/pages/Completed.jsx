@@ -5,6 +5,8 @@ import { CheckCircle2 } from "lucide-react";
 import SkeletonCard from "../components/SkeletonCard";
 import EmptyState from "../components/EmptyState";
 import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
+import {ArrowRight} from "lucide-react" 
 
 const Completed = () => {
   const { user } = useAuth();
@@ -59,13 +61,13 @@ const Completed = () => {
         <p className="mt-1 text-sm text-gray-600">
           Tasks you finished successfully
         </p>
+        <Link
+          to="/create-todo"
+          className=" mt-3 w-full max-w-xs px-6 py-3 text-sm font-semibold text-white bg-black rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition"
+        >
+          Create Task <ArrowRight size={16} />
+        </Link>
       </header>
-
-      {/* {todos.length === 0 && (
-        <div className="p-6 text-center bg-white border border-gray-200 rounded-xl shadow-sm">
-          <p className="text-sm text-gray-600">No completed tasks yet.</p>
-        </div>
-      )} */}
 
       {todos.length === 0 && (
         <EmptyState

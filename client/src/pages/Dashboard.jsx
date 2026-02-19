@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { getTodos } from "../services/api";
 import { useToast } from "../context/ToastContext";
 import {
@@ -9,6 +10,7 @@ import {
   AlertCircle,
   Trash2,
   Activity,
+  ArrowRight,
 } from "lucide-react";
 
 import KpiCard from "../components/dashboard/KpiCard";
@@ -210,6 +212,12 @@ const Dashboard = () => {
         <p className="mt-1 text-sm text-gray-600">
           Analytics overview of your task activity and performance
         </p>
+        <Link
+          to="/create-todo"
+          className=" mt-3 w-full max-w-xs px-6 py-3 text-sm font-semibold text-white bg-black rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition"
+        >
+          Create Task <ArrowRight size={16} />
+        </Link>
       </header>
 
       <section className="grid grid-cols-2 gap-4">
