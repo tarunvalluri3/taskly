@@ -1,33 +1,25 @@
 export const header_content = {
-  heading: "Track. Complete. Beat Deadlines.",
+  heading: "Track. Execute. Improve.",
   subheading:
-    "A mobile-first task tracker with priority control, outcome tracking, and built-in analytics — not just a todo list."
+    "A mobile-first productivity tracker that records outcomes, priorities, missed reasons, and deleted logic — not just tasks."
 };
 
 export const home_sections = {
   value:
-    "TrackMyWork helps you manage tasks with deadlines, priorities, and real outcomes — so you can measure productivity, not just write lists.",
+    "This application transforms simple tasks into structured execution data, helping you analyze productivity patterns over time.",
 
   features: [
-    "Create tasks with due time and priority",
+    "Create tasks with due dates",
+    "Assign Low, Medium, High priority",
     "Mark completed, missed, or deleted with reasons",
-    "Separate Active, Completed, Missed, Deleted views",
-    "Edit active tasks without breaking history",
-    "Mobile-first workflow design"
-  ],
-
-  analytics: [
-    "Status distribution insights",
-    "Priority workload breakdown",
-    "Completion performance score",
-    "Missed & deleted reason analysis",
-    "7-day activity trend tracking"
+    "View tasks grouped by lifecycle state",
+    "Mobile-first clean workflow"
   ],
 
   benefits: [
-    "Understand why tasks fail — not just that they failed",
-    "Improve planning with priority visibility",
-    "Measure completion reliability",
-    "Detect behavior patterns over time"
+    "Understand why tasks fail",
+    "Improve planning accuracy",
+    "Increase completion reliability",
+    "Build long-term execution discipline"
   ]
 };

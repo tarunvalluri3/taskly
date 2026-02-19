@@ -1,1 +1,9 @@
-@import "tailwindcss";
+@import "tailwindcss"; 
+
+@theme {
+  --font-sans: "Manrope", sans-serif;
+} 
+
+body {
+  font-family: var(--font-sans);
+}

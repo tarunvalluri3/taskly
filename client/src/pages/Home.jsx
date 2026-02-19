@@ -1,56 +1,117 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, useScroll, useSpring } from "framer-motion";
 import {
-  BarChart3,
+  ArrowRight,
   CheckCircle2,
   Clock,
   Target,
-  TrendingUp,
   AlertCircle,
+  Trash2,
+  BarChart3,
+  Shield,
   Layers,
-  ArrowRight
+  TrendingUp
 } from "lucide-react";
 
 import { header_content } from "../content";
 
-/* ---------------- animation helpers ---------------- */
+/* ---------------- animations ---------------- */
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0 }
 };
 
-/* ---------------- feature card ---------------- */
+const staggerContainer = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.12 }
+  }
+};
 
-const FeatureCard = ({ icon:Icon,  title, text }) => (
+/* ---------------- reusable card ---------------- */
+
+const Card = ({ icon: Icon, title, text }) => (
   <motion.div
     variants={fadeUp}
-    whileHover={{ y: -6 }}
-    className="p-6 bg-white border border-gray-200 rounded-2xl shadow-sm text-center"
+    whileHover={{
+      y: -6,
+      scale: 1.02
+    }}
+    transition={{ type: "spring", stiffness: 260, damping: 18 }}
+    className="
+      group
+      backdrop-blur-xl
+      bg-white/60
+      border border-gray-200
+      rounded-2xl
+      p-6
+      shadow-sm
+      text-center
+      sm:text-left
+    "
   >
-    <div className="mx-auto mb-4 w-12 h-12 flex items-center justify-center bg-black text-white rounded-xl">
-      <Icon size={20} />
+    <div className="
+      mx-auto sm:mx-0
+      w-11 h-11
+      bg-black text-white
+      rounded-xl
+      flex items-center justify-center
+      mb-4
+      transition-transform
+      group-hover:rotate-6
+    ">
+      <Icon size={18} />
     </div>
 
     <h3 className="text-sm font-semibold text-black">{title}</h3>
-    <p className="mt-2 text-xs text-gray-600 leading-relaxed">{text}</p>
+    <p className="mt-2 text-xs text-gray-600 leading-relaxed">
+      {text}
+    </p>
   </motion.div>
 );
 
-/* ---------------- main page ---------------- */
+/* ---------------- main component ---------------- */
 
 const Home = () => {
+  /* scroll progress */
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 30,
+    restDelta: 0.001
+  });
+
   return (
-    <div className="space-y-28 pb-20">
+    <div className="relative pb-28 space-y-28 overflow-hidden">
+
+      {/* Scroll Progress Indicator */}
+      <motion.div
+        style={{ scaleX }}
+        className="fixed top-0 left-0 right-0 h-1 bg-black origin-left z-50"
+      />
+
+      {/* Subtle Background Grid */}
+      <div
+        className="
+          pointer-events-none
+          absolute inset-0
+          -z-10
+          bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)]
+          bg-[size:40px_40px]
+          opacity-30
+        "
+      />
 
       {/* ================= HERO ================= */}
-      <section className="px-4 pt-16 text-center space-y-8 relative overflow-hidden">
+      <section className="relative px-4 pt-24 text-center overflow-hidden">
 
+        {/* glow effect */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 0.6, scale: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.5 }}
           transition={{ duration: 1.2 }}
-          className="absolute -top-40 left-1/2 -translate-x-1/2 w-[36rem] h-[36rem] bg-gradient-to-tr from-gray-200 via-gray-100 to-transparent blur-3xl -z-10"
+          className="absolute -top-40 left-1/2 -translate-x-1/2 w-[32rem] h-[32rem] bg-gradient-to-tr from-gray-200 via-gray-100 to-transparent blur-3xl -z-10"
         />
 
         <motion.div
@@ -60,25 +121,68 @@ const Home = () => {
           transition={{ duration: 0.6 }}
           className="space-y-6"
         >
-          <h1 className="text-3xl sm:text-4xl font-bold leading-tight text-black">
+          {/* floating icons */}
+          <div className="flex justify-center gap-4">
+            {[Target, Clock, TrendingUp].map((Icon, i) => (
+              <motion.div
+                key={i}
+                animate={{ y: [0, -6, 0] }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  delay: i * 0.4
+                }}
+                className="w-11 h-11 bg-black text-white rounded-xl flex items-center justify-center"
+              >
+                <Icon size={18} />
+              </motion.div>
+            ))}
+          </div>
+
+          <h1 className="text-3xl font-bold leading-tight text-black sm:text-4xl">
             {header_content.heading}
           </h1>
 
-          <p className="text-sm sm:text-base text-gray-600 leading-relaxed max-w-xl mx-auto">
+          <p className="text-sm text-gray-600 leading-relaxed max-w-xl mx-auto sm:text-base">
             {header_content.subheading}
           </p>
 
+          {/* CTA */}
           <div className="flex flex-col gap-3 items-center pt-4">
             <Link
               to="/create-todo"
-              className="w-full max-w-xs px-6 py-3 text-sm font-semibold text-white bg-black rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition"
+              className="
+                group
+                w-full max-w-xs
+                px-6 py-3
+                text-sm font-semibold
+                text-white bg-black
+                rounded-xl
+                flex items-center justify-center gap-2
+                transition-all duration-200
+                hover:opacity-90
+              "
             >
-              Create Task <ArrowRight size={16} />
+              Create Your First Task
+              <ArrowRight
+                size={16}
+                className="transition-transform group-hover:translate-x-1"
+              />
             </Link>
 
             <Link
               to="/dashboard"
-              className="w-full max-w-xs px-6 py-3 text-sm font-semibold text-black bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition"
+              className="
+                w-full max-w-xs
+                px-6 py-3
+                text-sm font-semibold
+                text-black
+                bg-white
+                border border-gray-300
+                rounded-xl
+                transition-all duration-200
+                hover:bg-gray-50
+              "
             >
               View Dashboard
             </Link>
@@ -86,113 +190,123 @@ const Home = () => {
         </motion.div>
       </section>
 
-      {/* ================= ABOUT ================= */}
-      <section className="px-4 space-y-6 text-center max-w-3xl mx-auto">
-        <motion.h2
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          transition={{ duration: 0.6 }}
-          className="text-xl font-semibold text-black"
-        >
-          More Than a Todo List
-        </motion.h2>
-
-        <motion.p
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          transition={{ delay: 0.1 }}
-          className="text-sm text-gray-600 leading-relaxed"
-        >
-          TrackMyWork is built for structured execution.  
-          Every task has a lifecycle. Every outcome has meaning.  
-          And every decision generates insight.
-        </motion.p>
-      </section>
-
       {/* ================= FEATURES ================= */}
-      <section className="px-4 space-y-10">
-        <div className="text-center space-y-2">
-          <h2 className="text-lg font-semibold text-black">
-            Core Capabilities
+      <section className="px-4 space-y-10 max-w-6xl mx-auto">
+
+        <div className="text-center space-y-3">
+          <h2 className="text-xl font-semibold text-black">
+            Structured Productivity System
           </h2>
-          <p className="text-xs text-gray-600">
-            Built for productivity with measurable performance
+          <p className="text-sm text-gray-600 max-w-2xl mx-auto">
+            Not just tasks — outcomes, reasons, priorities and measurable
+            execution clarity.
           </p>
         </div>
 
         <motion.div
+          variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
-          variants={{
-            visible: { transition: { staggerChildren: 0.1 } }
-          }}
-          className="grid gap-6"
+          viewport={{ once: true }}
+          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
-          <FeatureCard
+          <Card
             icon={Clock}
-            title="Deadline Enforcement"
-            text="Assign due times and maintain structured execution."
+            title="Deadlines"
+            text="Attach due dates to every task and maintain execution discipline."
           />
-
-          <FeatureCard
+          <Card
             icon={Target}
             title="Priority Control"
-            text="Balance workload with clear priority weighting."
+            text="Low, Medium, High priority visibility."
           />
-
-          <FeatureCard
+          <Card
             icon={CheckCircle2}
-            title="Lifecycle States"
-            text="Active, Completed, Missed, Deleted — with reason tracking."
+            title="Outcome Tracking"
+            text="Completed, Missed, Deleted — fully recorded."
           />
-
-          <FeatureCard
-            icon={BarChart3}
-            title="Analytics Dashboard"
-            text="Visualize distribution, trends, and reliability."
-          />
-
-          <FeatureCard
+          <Card
             icon={AlertCircle}
-            title="Behavior Insights"
-            text="Understand why tasks fail — not just that they fail."
+            title="Missed Reasons"
+            text="Understand what blocks your execution."
           />
-
-          <FeatureCard
-            icon={TrendingUp}
-            title="Performance Tracking"
-            text="Measure your completion consistency over time."
+          <Card
+            icon={Trash2}
+            title="Deletion Reasons"
+            text="Track logic behind removal decisions."
+          />
+          <Card
+            icon={BarChart3}
+            title="Dashboard View"
+            text="See everything grouped by lifecycle state."
           />
         </motion.div>
       </section>
 
-      {/* ================= SERVICES STRIP ================= */}
-      <section className="px-4 py-14 bg-black rounded-3xl space-y-8 text-center">
-        <Layers size={24} className="mx-auto text-white" />
+      {/* ================= BENEFITS ================= */}
+      <section className="px-4 space-y-10 max-w-5xl mx-auto">
 
-        <h2 className="text-lg font-semibold text-white">
-          Structured Workflow. Real Intelligence.
-        </h2>
+        <div className="text-center space-y-3">
+          <h2 className="text-xl font-semibold text-black">
+            Why This App Is Different
+          </h2>
+        </div>
 
-        <p className="text-xs text-gray-400 max-w-xl mx-auto leading-relaxed">
-          TrackMyWork transforms tasks into measurable performance data.
-          Every action contributes to long-term productivity improvement.
-        </p>
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid gap-6 sm:grid-cols-2"
+        >
+          <Card
+            icon={Shield}
+            title="Private by Design"
+            text="Each user sees only their own tasks."
+          />
+          <Card
+            icon={TrendingUp}
+            title="Behavior Insights"
+            text="Detect patterns in missed and deleted tasks."
+          />
+          <Card
+            icon={CheckCircle2}
+            title="Execution Reliability"
+            text="Measure how consistently you deliver."
+          />
+          <Card
+            icon={Layers}
+            title="Lifecycle Intelligence"
+            text="Every task has a state and meaning."
+          />
+        </motion.div>
       </section>
 
       {/* ================= FINAL CTA ================= */}
       <section className="px-4 text-center space-y-6">
         <h3 className="text-lg font-semibold text-black">
-          Stop Managing Tasks. Start Mastering Execution.
+          Stop Managing Tasks. Start Improving Performance.
         </h3>
 
         <Link
           to="/create-todo"
-          className="inline-block px-8 py-3 text-sm font-semibold text-white bg-black rounded-xl hover:opacity-90 transition"
+          className="
+            group
+            inline-flex
+            px-8 py-3
+            text-sm font-semibold
+            text-white bg-black
+            rounded-xl
+            items-center gap-2
+            transition-all duration-200
+            hover:opacity-90
+          "
         >
-          Get Started
+          Get Started Now
+          <ArrowRight
+            size={16}
+            className="transition-transform group-hover:translate-x-1"
+          />
         </Link>
       </section>
 
